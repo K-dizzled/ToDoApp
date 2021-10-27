@@ -23,6 +23,10 @@ final class ToDoItem : Equatable {
         self.deadline = deadline
     }
     
+    func setText(_ text: String) { self.text = text }
+    func setImportance(_ importance: Importance) { self.importance = importance }
+    func setDeadline(_ deadline: TimeInterval?) { self.deadline = deadline }
+    
     static func == (lhs: ToDoItem, rhs: ToDoItem) -> Bool {
         if(lhs.deadline != rhs.deadline) {
             return false
