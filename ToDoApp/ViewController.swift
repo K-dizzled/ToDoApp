@@ -68,6 +68,7 @@ class ViewController: UIViewController, UITextViewDelegate {
         //MARK:- save button setup
         saveButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
         saveButton.setTitleColor(UIColor(red: 0, green: 0, blue: 0, alpha: 0.3), for: .normal)
+        
         //MARK:- save button interaction handler
         saveButton.addTarget(self, action: #selector(didButtonClick), for: .touchUpInside)
         
@@ -112,7 +113,7 @@ class ViewController: UIViewController, UITextViewDelegate {
         }
         
         if(deadlineSwitcher.isOn) {
-            todo.setDeadline(datePicker.date.timeIntervalSince1970)
+            todo.setDeadline(datePicker.date)
         } else {
             todo.setDeadline(nil)
         }
