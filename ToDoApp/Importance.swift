@@ -8,9 +8,9 @@
 import Foundation
 
 enum Importance : String {
-    case high = "high"
-    case ordinary = "ordinary"
-    case low = "low"
+    case high
+    case ordinary
+    case low
 }
 
 extension Importance {

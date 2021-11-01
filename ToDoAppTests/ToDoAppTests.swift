@@ -45,17 +45,15 @@ class ToDoAppTests: XCTestCase {
         }
         
         let DT : Date = Date()
-        var date : TimeInterval
         var td : ToDoItem
         
         for _ in 0..<100 {
             n = Int.random(in: 0..<1000)
             text = randomString(length: n)
-            date = DT.timeIntervalSince1970
             
             td = ToDoItem(text: text,
                           importance: importance,
-                          deadline: date)
+                          deadline: DT)
             
             if let jsonData = try? encoder.encode(td) {
               if let jsonString = String(data: jsonData, encoding: .utf8) {
@@ -65,8 +63,22 @@ class ToDoAppTests: XCTestCase {
             
             do {
               let decodedTODO = try decoder.decode(ToDoItem.self, from: json.data(using: .utf8)!)
+              print("-----------------------------------------------------")
+              print("""
+                  td id is: \(td.id)
+                  td Text is: \(td.text)
+                  td Importance is: \(td.importance)
+                  td Deadline is: \(String(describing: td.deadline))\n
+                  """)
               print(json)
+              print("""
+                  decoded td id is: \(decodedTODO.id)
+                  decoded td Text is: \(decodedTODO.text)
+                  decoded td Importance is: \(decodedTODO.importance)
+                  decoded td Deadline is: \(String(describing: decodedTODO.deadline))\n
+                  """)
               XCTAssertEqual(td, decodedTODO)
+              print("-----------------------------------------------------")
             } catch {
               print(error.localizedDescription)
             }

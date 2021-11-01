@@ -11,12 +11,12 @@ final class ToDoItem : Equatable {
     let id: String
     private(set) var text: String
     private(set) var importance: Importance
-    private(set) var deadline: TimeInterval?
+    private(set) var deadline: Date?
     
     init(itemId id: String? = nil,
          text: String,
          importance: Importance,
-         deadline: TimeInterval? = nil) {
+         deadline: Date? = nil) {
         self.id = id ?? UUID().uuidString
         self.text = text
         self.importance = importance
@@ -25,10 +25,10 @@ final class ToDoItem : Equatable {
     
     func setText(_ text: String) { self.text = text }
     func setImportance(_ importance: Importance) { self.importance = importance }
-    func setDeadline(_ deadline: TimeInterval?) { self.deadline = deadline }
+    func setDeadline(_ deadline: Date?) { self.deadline = deadline }
     
     static func == (lhs: ToDoItem, rhs: ToDoItem) -> Bool {
-        if(lhs.deadline != rhs.deadline) {
+        if(lhs.deadline?.timeIntervalSince1970 != rhs.deadline?.timeIntervalSince1970) {
             return false
         }
         if(lhs.text != rhs.text) {
@@ -64,7 +64,7 @@ extension ToDoItem : Codable {
         var properties = values.nestedContainer(keyedBy: CodingKeys.self, forKey: .todoItem)
         try properties.encode(id, forKey: .id)
         try properties.encode(text, forKey: .text)
-        try properties.encodeIfPresent(deadline, forKey: .deadline)
+        try properties.encodeIfPresent(deadline?.timeIntervalSince1970, forKey: .deadline)
         if(importance != .ordinary) {
             try properties.encode(importance, forKey: .importance)
         }
@@ -77,9 +77,9 @@ extension ToDoItem : Codable {
         let id = try properties.decode(String.self, forKey: .id)
         let text = try properties.decode(String.self, forKey: .text)
         
-        var deadline : TimeInterval? = nil
+        var deadline : Date? = nil
         if let date = try? properties.decode(TimeInterval.self, forKey: .deadline) {
-            deadline = date
+            deadline = Date(timeIntervalSince1970: date)
         }
         
         var importance : Importance = .ordinary
