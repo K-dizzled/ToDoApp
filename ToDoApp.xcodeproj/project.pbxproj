@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		75158718272C10D90050FA99 /* TDCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75158717272C10D90050FA99 /* TDCell.swift */; };
+		7515871D272C20E80050FA99 /* TdListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7515871C272C20E80050FA99 /* TdListViewController.swift */; };
 		7545506D272218A2001988AC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7545506C272218A2001988AC /* AppDelegate.swift */; };
 		7545506F272218A2001988AC /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7545506E272218A2001988AC /* SceneDelegate.swift */; };
 		75455071272218A2001988AC /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75455070272218A2001988AC /* ViewController.swift */; };
@@ -38,6 +40,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		75158717272C10D90050FA99 /* TDCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TDCell.swift; sourceTree = "<group>"; };
+		7515871C272C20E80050FA99 /* TdListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TdListViewController.swift; sourceTree = "<group>"; };
 		75455069272218A2001988AC /* ToDoApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7545506C272218A2001988AC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7545506E272218A2001988AC /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -115,6 +119,8 @@
 				7545509F2722220E001988AC /* ToDoItem.swift */,
 				754550A42722DE82001988AC /* FileCache.swift */,
 				754550A92722DE99001988AC /* Importance.swift */,
+				75158717272C10D90050FA99 /* TDCell.swift */,
+				7515871C272C20E80050FA99 /* TdListViewController.swift */,
 			);
 			path = ToDoApp;
 			sourceTree = "<group>";
@@ -270,9 +276,11 @@
 				75455071272218A2001988AC /* ViewController.swift in Sources */,
 				7545506D272218A2001988AC /* AppDelegate.swift in Sources */,
 				754550A02722220E001988AC /* ToDoItem.swift in Sources */,
+				7515871D272C20E80050FA99 /* TdListViewController.swift in Sources */,
 				754550AA2722DE99001988AC /* Importance.swift in Sources */,
 				754550A52722DE82001988AC /* FileCache.swift in Sources */,
 				7545506F272218A2001988AC /* SceneDelegate.swift in Sources */,
+				75158718272C10D90050FA99 /* TDCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
