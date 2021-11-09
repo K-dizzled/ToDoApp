@@ -7,7 +7,14 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITextViewDelegate {
+class ToDoAppColors {
+    static let mainBackgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1)
+    static let lightGreyColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.2)
+    static let middleGreyColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.3)
+    static let blueColor = UIColor(red: 0, green: 0.478, blue: 1, alpha: 1)
+}
+
+final class ViewController: UIViewController {
     @IBOutlet weak var saveButton: UIButton!
     @IBOutlet weak var cancelButton: UIButton!
     
@@ -24,14 +31,29 @@ class ViewController: UIViewController, UITextViewDelegate {
     @IBOutlet weak var deadlineSwitcher: UISwitch!
     @IBOutlet weak var pickedDeadlineDate: UILabel!
     
-    var todo : ToDoItem!
+    private var todo : ToDoItem!
+    var isTextFieldEmpty : Bool = true
+    private lazy var dateFormatter : DateFormatter = {
+        let df = DateFormatter()
+        df.locale = Locale(identifier: "ru_RU")
+        df.dateFormat = "dd MMMM y"
+        return df
+    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        //MARK:- Initialize UI
+        initializeUI()
+        
+        //MARK:- initialize to-do
+        todo = ToDoItem(text: "", importance: Importance.ordinary)
+    }
+    
+    func initializeUI() {
         //MARK:- text field setup
         tdTextField.backgroundColor = .white
-        tdTextField.layer.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1).cgColor
+        tdTextField.layer.backgroundColor = ToDoAppColors.mainBackgroundColor.cgColor
         tdTextField.layer.cornerRadius = 16
         tdTextField.textContainer.lineFragmentPadding = 0
         tdTextField.textContainerInset = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
@@ -44,36 +66,37 @@ class ViewController: UIViewController, UITextViewDelegate {
         tdTextField.becomeFirstResponder()
         tdTextField.selectedTextRange = tdTextField.textRange(from: tdTextField.beginningOfDocument,
                                                               to: tdTextField.beginningOfDocument)
+        isTextFieldEmpty = true
         
         //MARK:- importance picker setup
         prioritySwitcher.selectedSegmentIndex = 1
         
         //MARK:- separator setup
-        settingsSeparator.layer.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.2).cgColor
-        settingsSeparator2.layer.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.2).cgColor
+        settingsSeparator.layer.backgroundColor = ToDoAppColors.lightGreyColor.cgColor
+        settingsSeparator2.layer.backgroundColor = ToDoAppColors.lightGreyColor.cgColor
         settingsSeparator2.isHidden = true
 
         //MARK:- settings section setup
         tdSettingsStack.backgroundColor = .white
-        tdSettingsStack.layer.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1).cgColor
+        tdSettingsStack.layer.backgroundColor = ToDoAppColors.mainBackgroundColor.cgColor
         tdSettingsStack.layer.cornerRadius = 16
         
         //MARK:- delete button setup
         deleteTDButton.backgroundColor = .white
-        deleteTDButton.layer.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1).cgColor
+        deleteTDButton.layer.backgroundColor = ToDoAppColors.mainBackgroundColor.cgColor
         deleteTDButton.layer.cornerRadius = 16
         deleteTDButton.titleLabel?.font = UIFont.systemFont(ofSize: 17)
-        deleteTDButton.setTitleColor(UIColor(red: 0, green: 0, blue: 0, alpha: 0.3), for: .normal)
+        deleteTDButton.setTitleColor(ToDoAppColors.middleGreyColor, for: .normal)
         
         //MARK:- save button setup
         saveButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
-        saveButton.setTitleColor(UIColor(red: 0, green: 0, blue: 0, alpha: 0.3), for: .normal)
+        saveButton.setTitleColor(ToDoAppColors.middleGreyColor, for: .normal)
         
         //MARK:- save button interaction handler
         saveButton.addTarget(self, action: #selector(didButtonClick), for: .touchUpInside)
         
         cancelButton.titleLabel?.font = UIFont.systemFont(ofSize: 17)
-        cancelButton.setTitleColor(UIColor(red: 0, green: 0.478, blue: 1, alpha: 1), for: .normal)
+        cancelButton.setTitleColor(ToDoAppColors.blueColor, for: .normal)
         
         //MARK:- deadline switch interaction handler
         datePicker.isHidden = true
@@ -81,7 +104,7 @@ class ViewController: UIViewController, UITextViewDelegate {
         
         //MARK:- deadline label setup
         pickedDeadlineDate.isHidden = true
-        pickedDeadlineDate.textColor = UIColor(red: 0, green: 0.478, blue: 1, alpha: 1)
+        pickedDeadlineDate.textColor = ToDoAppColors.blueColor
         let tapAction = UITapGestureRecognizer(target: self, action: #selector(self.actionTapped(_:)))
         pickedDeadlineDate?.isUserInteractionEnabled = true
         pickedDeadlineDate?.addGestureRecognizer(tapAction)
@@ -89,24 +112,22 @@ class ViewController: UIViewController, UITextViewDelegate {
         //MARK:- date picker interaction handler
         datePicker.addTarget(self, action: #selector(datePickerChanged(picker:)), for: .valueChanged)
         
-        //MARK:- initialize to-do
-        todo = ToDoItem(text: "", importance: Importance.ordinary)
     }
     
     @objc func didButtonClick(_ sender: UIButton) {
         let prIndex = prioritySwitcher.selectedSegmentIndex
         switch prIndex {
             case 0:
-                todo.setImportance(Importance.low)
+                todo.setImportance(.low)
             case 1:
-                todo.setImportance(Importance.ordinary)
+                todo.setImportance(.ordinary)
             case 2:
-                todo.setImportance(Importance.high)
+                todo.setImportance(.high)
             default:
                 print("Bad to-do exception")
         }
         
-        if tdTextField.textColor != UIColor.lightGray {
+        if !self.isTextFieldEmpty {
             todo.setText(tdTextField.text)
         } else {
             todo.setText("")
@@ -130,9 +151,6 @@ class ViewController: UIViewController, UITextViewDelegate {
         let hasDeadline = mySwitch.isOn
         
         if(hasDeadline) {
-            let dateFormatter = DateFormatter()
-            dateFormatter.locale = Locale(identifier: "ru_RU")
-            dateFormatter.dateFormat = "dd MMMM y"
             datePicker.isHidden = false
             pickedDeadlineDate.text = dateFormatter.string(from: datePicker.date)
             pickedDeadlineDate.isHidden = false
@@ -145,9 +163,6 @@ class ViewController: UIViewController, UITextViewDelegate {
     }
     
     @objc func datePickerChanged(picker: UIDatePicker) {
-        let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(identifier: "ru_RU")
-        dateFormatter.dateFormat = "dd MMMM y"
         pickedDeadlineDate.text = dateFormatter.string(from: datePicker.date)
     }
     
@@ -157,22 +172,25 @@ class ViewController: UIViewController, UITextViewDelegate {
         datePicker.isHidden = !shown
         settingsSeparator2.isHidden = !shown
     }
-    
+}
+
+extension ViewController : UITextViewDelegate {
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         // Combine the textView text and the replacement text to
         // create the updated text string
-        let currentText:String = textView.text
+        let currentText: String = textView.text
         let updatedText = (currentText as NSString).replacingCharacters(in: range, with: text)
 
+        saveButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+        
         // If updated text view will be empty, add the placeholder
         // and set the cursor to the beginning of the text view
         if updatedText.isEmpty {
-
             textView.text = "Что нужно сделать?"
             textView.textColor = UIColor.lightGray
-            saveButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
-            saveButton.setTitleColor(UIColor(red: 0, green: 0, blue: 0, alpha: 0.3), for: .normal)
+            saveButton.setTitleColor(ToDoAppColors.middleGreyColor, for: .normal)
             textView.selectedTextRange = textView.textRange(from: textView.beginningOfDocument, to: textView.beginningOfDocument)
+            isTextFieldEmpty = true
         }
 
         // Else if the text view's placeholder is showing and the
@@ -180,10 +198,10 @@ class ViewController: UIViewController, UITextViewDelegate {
         // the text color to black then set its text to the
         // replacement string
          else if textView.textColor == UIColor.lightGray && !text.isEmpty {
-            saveButton.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
-            saveButton.setTitleColor(UIColor(red: 0, green: 0.478, blue: 1, alpha: 1), for: .normal)
+            saveButton.setTitleColor(ToDoAppColors.blueColor, for: .normal)
             textView.textColor = UIColor.black
             textView.text = text
+            isTextFieldEmpty = false
         }
 
         // For every other case, the text should change with the usual
@@ -205,4 +223,3 @@ class ViewController: UIViewController, UITextViewDelegate {
         }
     }
 }
-
