@@ -23,6 +23,13 @@ final class ToDoItem : Equatable {
         self.deadline = deadline
     }
     
+    init() {
+        self.id = UUID().uuidString
+        self.text = "Placeholder"
+        self.importance = .ordinary
+        self.deadline = nil
+    }
+    
     func setText(_ text: String) { self.text = text }
     func setImportance(_ importance: Importance) { self.importance = importance }
     func setDeadline(_ deadline: Date?) { self.deadline = deadline }

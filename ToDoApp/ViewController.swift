@@ -12,6 +12,7 @@ class ToDoAppColors {
     static let lightGreyColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.2)
     static let middleGreyColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.3)
     static let blueColor = UIColor(red: 0, green: 0.478, blue: 1, alpha: 1)
+    static let magnoliaColor = UIColor(red: 0.97, green: 0.97, blue: 0.95, alpha: 1.0)
 }
 
 final class ViewController: UIViewController {
@@ -58,6 +59,7 @@ final class ViewController: UIViewController {
         tdTextField.textContainer.lineFragmentPadding = 0
         tdTextField.textContainerInset = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
         tdTextField.font = UIFont.systemFont(ofSize: 17)
+        tdTextField.heightAnchor.constraint(greaterThanOrEqualToConstant: 120).isActive = true
         
         //MARK:- placeholder setup
         self.tdTextField.delegate = self
@@ -70,6 +72,8 @@ final class ViewController: UIViewController {
         
         //MARK:- importance picker setup
         prioritySwitcher.selectedSegmentIndex = 1
+        prioritySwitcher.setImage(UIImage(named: "low_importance")?.withRenderingMode(.alwaysOriginal), forSegmentAt: 0)
+        prioritySwitcher.setImage(UIImage(named: "high_importance")?.withRenderingMode(.alwaysOriginal), forSegmentAt: 2)
         
         //MARK:- separator setup
         settingsSeparator.layer.backgroundColor = ToDoAppColors.lightGreyColor.cgColor
@@ -97,6 +101,7 @@ final class ViewController: UIViewController {
         
         cancelButton.titleLabel?.font = UIFont.systemFont(ofSize: 17)
         cancelButton.setTitleColor(ToDoAppColors.blueColor, for: .normal)
+        cancelButton.addTarget(self, action: #selector(cancelButtonPressed), for: .touchUpInside)
         
         //MARK:- deadline switch interaction handler
         datePicker.isHidden = true
@@ -171,6 +176,10 @@ final class ViewController: UIViewController {
         
         datePicker.isHidden = !shown
         settingsSeparator2.isHidden = !shown
+    }
+    
+    @objc func cancelButtonPressed() -> Void {
+        self.dismiss(animated: true, completion: nil)
     }
 }
 
